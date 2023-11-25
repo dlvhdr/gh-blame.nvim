@@ -1,5 +1,5 @@
 -- main module file
-local module = require("plugin_name.module")
+local module = require("gh_blame.module")
 
 ---@class Config
 ---@field opt string Your config option
