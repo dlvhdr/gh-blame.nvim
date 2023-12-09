@@ -1,4 +1,4 @@
-local plugin = require("gh_blame")
+local plugin = require("gh-blame")
 
 describe("setup", function()
   it("works with default", function()
