@@ -3,6 +3,8 @@
 
 # gh-blame.nvim
 
+![image](https://github.com/dlvhdr/gh-blame.nvim/assets/6196971/b700f784-7436-4895-a7b8-4da5571958e5)
+
 ## Requirements
 
 Install the `gh` CLI - see the [installation instructions](https://github.com/cli/cli#installation)
