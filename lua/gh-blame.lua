@@ -16,7 +16,7 @@ M.setup = function(args)
   M.config = vim.tbl_deep_extend("force", M.config, args or {})
 end
 
-M.hello = function()
+M.show_current_line = function()
   GITHUB_TOKEN = vim.env["GITHUB_TOKEN"]
 
   local winid = vim.api.nvim_get_current_win()
