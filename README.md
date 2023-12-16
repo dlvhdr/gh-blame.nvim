@@ -19,7 +19,7 @@ return {
 
 ## TODO
 
-[] Handle errors
-[] Prettify output with markdown parsing
-[] Blame on cursor hold
-[] Blame sidebar like in fugitive
+- [ ] Handle errors
+- [ ] Prettify output with markdown parsing
+- [ ] Blame on cursor hold
+- [ ] Blame sidebar like in fugitive
