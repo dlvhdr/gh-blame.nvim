@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- gh
+Install the `gh` CLI - see the [installation](https://github.com/cli/cli#installation)
 
 ## Usage
 
