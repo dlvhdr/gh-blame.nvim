@@ -1,3 +1,6 @@
+> [!CAUTION]
+> ROUGH DRAFT - super early in development
+
 # gh-blame.nvim
 
 ## Requirements
