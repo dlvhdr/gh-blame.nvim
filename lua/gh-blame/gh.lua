@@ -76,7 +76,6 @@ M.open_pr_popup = function(pr)
   local url = NuiLine({ NuiText(pr.url, "Label") })
   url:render(popup.bufnr, -1, 3)
 
-  vim.print(pr.bodyText)
   local lineId = 4
   for _, line in ipairs(vim.split(pr.bodyText, "\n")) do
     local description = NuiLine({ NuiText(line) })
