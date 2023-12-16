@@ -26,10 +26,10 @@ local function get_lnum(winid)
   return vim.api.nvim_win_get_cursor(winid)[1]
 end
 
-local findAssociatedPullRequests = function(sha)
+local findAssociatedPullRequests = function(repo, sha)
   local query = [[
-query {
-  resource(url: "https://github.com/dlvhdr/dotfiles/commit/]] .. sha .. [[") {
+query Blame($url: URI!) {
+  resource(url: $url) {
     ... on Commit {
       id
       associatedPullRequests(first: 1, orderBy: {field: CREATED_AT, direction:DESC}) {
@@ -47,8 +47,9 @@ query {
 }
 ]]
 
+  local url = "https://github.com/" .. repo .. "/commit/" .. sha
   local res = gh.run({
-    args = { "api", "graphql", "-f", "query=" .. query },
+    args = { "api", "graphql", "-f", "query=" .. query, "-f", "url=" .. url },
     mode = "sync",
   })
   vim.print(res)
@@ -56,16 +57,6 @@ end
 
 M.hello = function()
   GITHUB_TOKEN = vim.env["GITHUB_TOKEN"]
-
-  -- use gh api to do a git blame
-
-  -- associatedPullRequests(
-  --   after: String
-  --   before: String
-  --   first: Int
-  --   last: Int
-  --   orderBy: PullRequestOrder = {field: CREATED_AT, direction: ASC}
-  -- ): PullRequestConnection
 
   local winid = vim.api.nvim_get_current_win()
   local bufnr = vim.api.nvim_win_get_buf(winid)
@@ -77,6 +68,12 @@ M.hello = function()
     end)
 
   vim.print({ winid, bufnr, lnum, file })
+
+  local repo = gh.run({
+    args = { "repo", "view", "--json", "nameWithOwner", "-q", ".nameWithOwner" },
+    mode = "sync",
+  })
+
   local cmd = "git blame " .. file .. " -L " .. lnum .. ",+1 --incremental"
   vim.print("running: " .. cmd)
 
@@ -90,7 +87,7 @@ M.hello = function()
       local sha = vim.split(lines[1], " ")[1]
       vim.print("FOUND SHA: " .. sha)
 
-      findAssociatedPullRequests(sha)
+      findAssociatedPullRequests(repo, sha)
     end,
     on_stderr = function(jobid, data, event)
       -- if #data == 0 then
