@@ -2,10 +2,11 @@
 
 ## Requirements
 
-Install the `gh` CLI - see the [installation](https://github.com/cli/cli#installation)
+Install the `gh` CLI - see the [installation instructions](https://github.com/cli/cli#installation)
 
-## Usage
+## Installation
 
+Using lazy:
 ```lua
 return {
   "dlvhdr/gh-blame.nvim",
@@ -15,3 +16,10 @@ return {
   },
 }
 ```
+
+## TODO
+
+[] Handle errors
+[] Prettify output with markdown parsing
+[] Blame on cursor hold
+[] Blame sidebar like in fugitive
