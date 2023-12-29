@@ -1,6 +1,11 @@
 local gh = require("gh-blame.gh")
 local utils = require("gh-blame.utils")
 local git = require("gh-blame.git")
+local Popup = require("nui.popup")
+local NuiLine = require("nui.line")
+local NuiText = require("nui.text")
+local autocmd = require("nui.utils.autocmd")
+local event = require("nui.utils.autocmd").event
 
 ---@class Config
 local config = {}
@@ -17,19 +22,25 @@ M.setup = function(args)
 end
 
 M.show_current_line = function()
-  GITHUB_TOKEN = vim.env["GITHUB_TOKEN"]
+  vim.notify("Fetching PR details...", vim.log.levels.INFO, {
+    title = "GhBlame",
+  })
 
-  local winid = vim.api.nvim_get_current_win()
-  local bufnr = vim.api.nvim_win_get_buf(winid)
-  local lnum = utils.get_lnum(winid)
-  local file = utils.get_buf_path(bufnr)
+  vim.schedule(function()
+    GITHUB_TOKEN = vim.env["GITHUB_TOKEN"]
 
-  local blame_sha = git.get_line_blame_sha(file, lnum)
+    local winid = vim.api.nvim_get_current_win()
+    local bufnr = vim.api.nvim_win_get_buf(winid)
+    local lnum = utils.get_lnum(winid)
+    local file = utils.get_buf_path(bufnr)
 
-  local repo_name_with_owner = gh.get_repo_name_with_owner()
+    local blame_sha = git.get_line_blame_sha(file, lnum)
 
-  local pr = gh.find_associated_pr(repo_name_with_owner, blame_sha)
-  gh.open_pr_popup(pr)
+    local repo_name_with_owner = gh.get_repo_name_with_owner()
+
+    local pr = gh.find_associated_pr(repo_name_with_owner, blame_sha)
+    gh.open_pr_popup(pr)
+  end)
 end
 
 return M
