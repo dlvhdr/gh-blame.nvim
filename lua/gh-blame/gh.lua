@@ -3,7 +3,6 @@ local time_ago = require("gh-blame.time-ago")
 local Job = require("plenary.job")
 local Popup = require("nui.popup")
 local event = require("nui.utils.autocmd").event
-local autocmd = require("nui.utils.autocmd")
 local NuiLine = require("nui.line")
 local NuiText = require("nui.text")
 
