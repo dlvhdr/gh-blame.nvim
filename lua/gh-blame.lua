@@ -1,11 +1,6 @@
 local gh = require("gh-blame.gh")
 local utils = require("gh-blame.utils")
 local git = require("gh-blame.git")
-local Popup = require("nui.popup")
-local NuiLine = require("nui.line")
-local NuiText = require("nui.text")
-local autocmd = require("nui.utils.autocmd")
-local event = require("nui.utils.autocmd").event
 
 ---@class Config
 local config = {}
