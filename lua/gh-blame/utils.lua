@@ -41,4 +41,22 @@ M.run_job = function(command, opts, mode)
   end
 end
 
+local epoch = os.time({ year = 1970, month = 1, day = 1, hour = 0 })
+
+---@param json_date string
+---@return integer
+M.parse_json_date = function(json_date)
+  local year, month, day, hour, minute, seconds, offsetsign, offsethour, offsetmin =
+    json_date:match("(%d+)%-(%d+)%-(%d+)%a(%d+)%:(%d+)%:([%d%.]+)([Z%+%- ])(%d?%d?)%:?(%d?%d?)")
+  local timestamp = os.time({ year = year, month = month, day = day, hour = hour, min = minute, sec = seconds }) - epoch
+  local offset = 0
+  if offsetsign ~= "Z" then
+    offset = tonumber(offsethour) * 60 + tonumber(offsetmin)
+    if offsetsign == "-" then
+      offset = -offset
+    end
+  end
+  return timestamp - offset * 60
+end
+
 return M

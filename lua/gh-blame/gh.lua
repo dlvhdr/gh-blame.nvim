@@ -1,4 +1,5 @@
 local utils = require("gh-blame.utils")
+local time_ago = require("gh-blame.time-ago")
 local Job = require("plenary.job")
 local Popup = require("nui.popup")
 local event = require("nui.utils.autocmd").event
@@ -33,6 +34,7 @@ end
 
 M.open_pr_popup = function(pr)
   local popup = Popup({
+    enter = true,
     focusable = true,
     border = {
       style = "rounded",
@@ -61,22 +63,31 @@ M.open_pr_popup = function(pr)
     popup:unmount()
   end)
 
-  local bufnr = vim.api.nvim_get_current_buf()
-  autocmd.buf.define(bufnr, event.CursorMoved, function()
-    popup:unmount()
-  end, { once = true })
-
-  local number = NuiText("#" .. pr.number .. " ", "Label")
   local title = NuiText(pr.title, "Title")
-  local header = NuiLine({ number, title })
+  local number = NuiText(" #" .. pr.number .. " ", "Conceal")
+  local header = NuiLine({ title, number })
   header:render(popup.bufnr, -1, 1)
 
-  local author = NuiLine({ NuiText(pr.author.login, "LineNr") })
-  author:render(popup.bufnr, -1, 2)
-  local url = NuiLine({ NuiText(pr.url, "Label") })
-  url:render(popup.bufnr, -1, 3)
+  local author = NuiText(pr.author.login, "ModeMsg")
+  local mergedAtUnixTime = utils.parse_json_date(pr.mergedAt)
+  local mergedAt = NuiText(" merged " .. time_ago.format(mergedAtUnixTime), "Normal")
+  local subtitle = NuiLine({ author, mergedAt })
+  subtitle:render(popup.bufnr, -1, 2)
 
-  local lineId = 4
+  local seperator = NuiText(" · ", "Conceal")
+  local conversation = NuiText("Comments " .. pr.totalCommentsCount, "Conceal")
+  local commits = NuiText("Commits " .. pr.commits.totalCount, "Conceal")
+  local files = NuiText("Files " .. pr.changedFiles, "Conceal")
+  local additions = NuiText("+" .. pr.additions, "diffAdded")
+  local deletions = NuiText(" -" .. pr.deletions, "diffRemoved")
+  local details = NuiLine({ conversation, seperator, commits, seperator, files, seperator, additions, deletions })
+  details:render(popup.bufnr, -1, 3)
+
+  local url = NuiLine({ NuiText("  → ", "Conceal"), NuiText(pr.url, "markdownLinkText") })
+  url:render(popup.bufnr, -1, 4)
+  NuiLine():render(popup.bufnr, -1, 5)
+
+  local lineId = 6
   for _, line in ipairs(vim.split(pr.bodyText, "\n")) do
     local description = NuiLine({ NuiText(line) })
     description:render(popup.bufnr, -1, lineId)
@@ -99,6 +110,14 @@ query Blame($url: URI!) {
           bodyText
           number
           url
+          mergedAt
+          additions
+          deletions
+          totalCommentsCount
+          commits {
+            totalCount
+          }
+          changedFiles
         }
       }
     }
