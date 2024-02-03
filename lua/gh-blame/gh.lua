@@ -90,8 +90,9 @@ M.open_pr_popup = function(pr)
   url:render(popup.bufnr, -1, 4)
   NuiLine():render(popup.bufnr, -1, 5)
 
+  local body = pr.body:gsub("\r?\n?<!%-%-.*%-%->\r?\n?", "")
   local lineId = 6
-  for _, line in ipairs(vim.split(pr.body, "\r\n")) do
+  for _, line in ipairs(vim.split(body, "\r\n")) do
     local description = NuiLine({ NuiText(line) })
     description:render(popup.bufnr, -1, lineId)
     lineId = lineId + 1
@@ -110,7 +111,6 @@ query Blame($url: URI!) {
             login
           }
           title
-          bodyText
           body
           number
           url
