@@ -3,7 +3,7 @@
 
 # gh-blame.nvim
 
-![image](https://github.com/dlvhdr/gh-blame.nvim/assets/6196971/b700f784-7436-4895-a7b8-4da5571958e5)
+![image](https://github.com/dlvhdr/gh-blame.nvim/assets/6196971/ae9e41f2-4d26-46f2-9bfa-0d5ed7769f69)
 
 ## Requirements
 
