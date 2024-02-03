@@ -33,6 +33,7 @@ end
 
 M.open_pr_popup = function(pr)
   local popup = Popup({
+    buf_options = { filetype = "markdown" },
     enter = true,
     focusable = true,
     border = {
@@ -67,9 +68,12 @@ M.open_pr_popup = function(pr)
   local header = NuiLine({ title, number })
   header:render(popup.bufnr, -1, 1)
 
-  local author = NuiText(pr.author.login, "ModeMsg")
-  local mergedAtUnixTime = utils.parse_json_date(pr.mergedAt)
-  local mergedAt = NuiText(" merged " .. time_ago.format(mergedAtUnixTime), "Normal")
+  local author = NuiText("@" .. pr.author.login, "ModeMsg")
+  local mergedAt = NuiText("", "Normal")
+  if pr.mergedAt ~= vim.NIL then
+    local mergedAtUnixTime = utils.parse_json_date(pr.mergedAt)
+    mergedAt = NuiText(" merged " .. time_ago.format(mergedAtUnixTime), "Normal")
+  end
   local subtitle = NuiLine({ author, mergedAt })
   subtitle:render(popup.bufnr, -1, 2)
 
@@ -87,7 +91,7 @@ M.open_pr_popup = function(pr)
   NuiLine():render(popup.bufnr, -1, 5)
 
   local lineId = 6
-  for _, line in ipairs(vim.split(pr.bodyText, "\n")) do
+  for _, line in ipairs(vim.split(pr.body, "\r\n")) do
     local description = NuiLine({ NuiText(line) })
     description:render(popup.bufnr, -1, lineId)
     lineId = lineId + 1
@@ -107,6 +111,7 @@ query Blame($url: URI!) {
           }
           title
           bodyText
+          body
           number
           url
           mergedAt
