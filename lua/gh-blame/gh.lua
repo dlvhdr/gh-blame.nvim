@@ -90,7 +90,7 @@ M.open_pr_popup = function(pr)
   url:render(popup.bufnr, -1, 4)
   NuiLine():render(popup.bufnr, -1, 5)
 
-  local body = pr.body:gsub("\r?\n?<!%-%-.*%-%->\r?\n?", "")
+  local body = pr.body:gsub("<!%-%-.-%-%->\r?\n?", "")
   local lineId = 6
   for _, line in ipairs(vim.split(body, "\r\n")) do
     local description = NuiLine({ NuiText(line) })
