@@ -1,5 +1,5 @@
 > [!CAUTION]
-> ROUGH DRAFT - super early in development
+> Early in development
 
 # gh-blame.nvim
 
