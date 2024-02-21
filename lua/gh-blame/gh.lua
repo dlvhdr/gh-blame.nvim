@@ -77,6 +77,12 @@ M.open_pr_popup = function(pr)
   local subtitle = NuiLine({ author, mergedAt })
   subtitle:render(popup.bufnr, -1, 2)
 
+  local baseRefName = NuiText(pr.baseRefName, "Conceal")
+  local sepChar = NuiText(" < ", "Normal")
+  local headRefName = NuiText(pr.headRefName, "Conceal")
+  local branchesRow = NuiLine({ baseRefName, sepChar, headRefName })
+  branchesRow:render(popup.bufnr, -1, 3)
+
   local seperator = NuiText(" · ", "Conceal")
   local conversation = NuiText("Comments " .. pr.totalCommentsCount, "Conceal")
   local commits = NuiText("Commits " .. pr.commits.totalCount, "Conceal")
@@ -84,14 +90,14 @@ M.open_pr_popup = function(pr)
   local additions = NuiText("+" .. pr.additions, "diffAdded")
   local deletions = NuiText(" -" .. pr.deletions, "diffRemoved")
   local details = NuiLine({ conversation, seperator, commits, seperator, files, seperator, additions, deletions })
-  details:render(popup.bufnr, -1, 3)
+  details:render(popup.bufnr, -1, 4)
 
   local url = NuiLine({ NuiText("  → ", "Conceal"), NuiText(pr.url, "markdownLinkText") })
-  url:render(popup.bufnr, -1, 4)
-  NuiLine():render(popup.bufnr, -1, 5)
+  url:render(popup.bufnr, -1, 5)
+  NuiLine():render(popup.bufnr, -1, 6)
 
   local body = pr.body:gsub("<!%-%-.-%-%->\r?\n?", "")
-  local lineId = 6
+  local lineId = 7
   for _, line in ipairs(vim.split(body, "\r\n")) do
     local description = NuiLine({ NuiText(line) })
     description:render(popup.bufnr, -1, lineId)
@@ -114,6 +120,8 @@ query Blame($url: URI!) {
           body
           number
           url
+          baseRefName
+          headRefName
           mergedAt
           additions
           deletions
